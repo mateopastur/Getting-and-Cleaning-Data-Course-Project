@@ -12,26 +12,26 @@
         stest <- read.table("C:/Users/mpastur/Desktop/test/UCI HAR Dataset/test/subject_test.txt")
         test <- bind_cols(ytest,stest,xtest)
 
-##Train files
+## Train files
         xtrain <- read.table("C:/Users/mpastur/Desktop/test/UCI HAR Dataset/train/X_train.txt")
         ytrain <- read.table("C:/Users/mpastur/Desktop/test/UCI HAR Dataset/train/y_train.txt")
         strain <- read.table("C:/Users/mpastur/Desktop/test/UCI HAR Dataset/train/subject_train.txt")
         train <- bind_cols(ytrain,strain, xtrain)
 
-##merge files
+## Merge files
         merged <- bind_rows(test,train)
 
-##activity name col
+## Activity name column
         actname <- merge(actlabels,merged, by.x = "V1", by.y="V1...1")
         mergedg <- select(actname, -V1)
 
-##col names
+## Col names
         colnames(mergedg) <- c("activity", "subject" ,features[1:561,2])
 
-##select mean and std 
+## Select mean and std columns
         e4 <- dplyr::select(mergedg,contains(c("activity","subject","mean","std")))
-
-##Average of each variable for each activity and subject
+        
+## Average calculation of each variable for each activity and subject
         colnames(merged) <- c("activity", "subject" ,features[1:561,2])
         meansd <- dplyr::select(merged,contains(c("activity","subject","mean","std")))
         e5 <- lapply(split(meansd,list(meansd$activity,meansd$subject)),colMeans)
